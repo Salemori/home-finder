@@ -1,15 +1,7 @@
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema(
+const authSchema = new mongoose.Schema(
   {
-    firstName: {
-        type: String,
-        required: true
-    },
-    lastName: {
-        type: String,
-         required: true
-    },
     email: {
         type: String,
         required: true
@@ -18,12 +10,18 @@ const userSchema = new mongoose.Schema(
         type: String,
         required: true
     },
+    firstName: {
+        type: String,
+    },
+    lastName: {
+        type: String,
+    },
     phoneNumber: {
         type: String
     },
     role: {
         type: String,
-        enum: ["user","agent"],
+        enum: ["user", "agent"],
         default: "user"
     },
     isVerified:{
@@ -38,6 +36,6 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-const userModel = mongoose.model("User", userSchema);
+const Auth = mongoose.model("Auth", authSchema);
 
-module.exports = userModel; 
+module.exports = Auth; 

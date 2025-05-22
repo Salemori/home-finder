@@ -1,15 +1,18 @@
 const express = require("express");
-const connectDB = require("./db/db");
+const connectDB = require("./config/db");
+const authRouter = require("./routers/authRouter");
+require("dotenv").config();
 
-connectDB();
+
 
 const app = express();
+connectDB();
+
 app.use(express.json());
+app.use("/auth", authRouter)
 
-
-const PORT = process.env.PORT || "8000";
-
-app.listen(PORT, () => console.log("Server running on port 8000"));
+const port = process.env.PORT || "8000";
+app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
 
 app.get("/", (req, res)=>{
     return res.json({message: "Welcome to Home Finder Server"});

@@ -23,9 +23,28 @@ const propertySchema = new mongoose.Schema(
             type: String, 
             required: true
         },
+        media:{
+            images: [String],
+            video: String
+        },
         status:{
             type: String,
             enum: ["available", "sold", "rented"],
+            default: "available"
+        },
+          location: {
+            address: String,
+            city: String,
+            state: String,
+        },
+          details: {
+            bedrooms: Number,
+            bathrooms: Number,
+            toilets: Number,
+        },
+        owner: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
             required: true
         },
         isActive:{
@@ -37,4 +56,6 @@ const propertySchema = new mongoose.Schema(
     }
 );
 
-const propertyModel = mongoose.model("Property")
+const Property = mongoose.model("Property");
+
+module.exports = Property
