@@ -22,73 +22,26 @@ const signUpService = async (userDetails) => {
   return user;
 };
 
-// const signInService = async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
 
-//     const user = await UserModel.findOne({ email });
-
-//     if (!user) {
-//       return res.status(409).json({
-//         status: "failed",
-//         message: "User does not exist",
-//       });
-//     }
-
-//     const passwordEqual = await bcrypt.compare(password, user.password);
-//     if (!passwordEqual) {
-//       return res.status(401).json({
-//         status: "failed",
-//         message: "User login failed",
-//       });
-//     }
-
-//     const token = jwt.sign(
-//       { id: user._id, email: user.email },
-//       process.env.SECRET_KEY
-//     );
-//     res.status(200).json({
-//       status: "success",
-//       message: "User signed-in successfully",
-//       token,
-//     });
-//   } catch (error) {
-//     res.json({
-//       status: "failed",
-//       message: error.message,
-//     });
-//   }
-// };
 
 const updateProfileService = async (id, userDetails) => {
-  
+  const user = await Auth.findByIdAndUpdate(id, userDetails, {
+    new: true,
+    runValidators: true,
+  });
 
-    const user = await Auth.findByIdAndUpdate(id, userDetails, {
-      new: true,
-      runValidators: true,
-    });
-
-   return user;
-  }
-
+  return user;
+};
 
 const updateRoleService = async (id, userDetails) => {
-   
-  if (!id || ! userDetails){
-    throw new Error("User ID and user update detail is required");
-  }
 
-    const user = await Auth.findByIdAndUpdate(id, userDetails, {
-      new: true,
-      runValidators: true,
-    });
+  const user = await Auth.findByIdAndUpdate(id, userDetails, {
+    new: true,
+    runValidators: true,
+  });
 
-   return user;
-  }
-
-  
-
-
+  return user;
+};
 
 // const getUser = async (req, res) => {
 //   try {
