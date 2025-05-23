@@ -6,8 +6,8 @@ const handleGetProperties = async (req, res) => {
     console.log(properties);
 
     res.status(200).json({
-      status: "success",
-      properties,
+      message: "Properties retrived",
+      data: properties,
     });
   } catch (error) {
     console.log(error);
@@ -55,13 +55,11 @@ const handleCreateProperty = async (req, res) => {
     await property.save();
 
     res.status(201).json({
-      status: "success",
       message: "property created successfully",
       data: property
     });
   } catch (error) {
     res.status(400).json({
-      status: "failed",
       message: error.message,
     });
   }
@@ -76,19 +74,16 @@ const handleGetpropertyById = async (req, res) => {
 
     if (!property || !property.isActive) {
       return res.status(404).json({
-        status: "failed",
         message: "property not found",
       });
     }
 
     res.status(200).json({
-      status: "success",
       property,
     });
   } catch (error) {
     console.log(error);
     res.json({
-      status: "failed",
       message: error.message,
     });
   }
@@ -101,13 +96,11 @@ const handleGetPropertyByOwner = async (req, res) => {
       .populate("owner");
 
     res.status(200).json({
-      status: "success",
       message: "property retrived successfully",
       propertiesByUser,
     });
   } catch (error) {
     res.json({
-      status: "failed",
       message: error.message,
       propertiesByUser,
     });
@@ -128,19 +121,16 @@ const handleUpdateproperty = async (req, res) => {
     if (!property) {
       console.log(property);
       return res.status(404).json({
-        status: "failed",
         message: "property not found",
       });
     }
 
     res.status(200).json({
-      status: "success",
       message: "property updated successfully",
       data: property
     });
   } catch (error) {
     res.json({
-      status: "failed",
       message: error.message,
     });
   }
@@ -164,12 +154,10 @@ const handleDeleteproperty = async (req, res) => {
     }
 
     res.status(200).json({
-      status: "success",
       message: "property deleted successfully",
     });
   } catch (error) {
     res.json({
-      status: "failed",
       message: error.message,
     });
   }
@@ -187,11 +175,10 @@ const handlePermanentDeleteproperty = async (req, res) => {
     }
 
     res.status(200).json({
-      status: "success",
       message: "Property permanent delete successful",
     });
   } catch (error) {
-    res.json({
+    res.status(400).json({
       message: error.message,
     });
   }

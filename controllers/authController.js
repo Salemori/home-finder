@@ -9,20 +9,18 @@ const {
 } = require("../services/authService");
 const { generateTokens } = require("../utils/authUtil");
 
-
 const handleSignUp = async (req, res) => {
   try {
     const { email, password } = req.body;
 
     const result = await signUpService({ email, password });
 
-    res.status(201).json({
+    return res.status(201).json({
       message: "User registered successfully",
       data: result,
     });
   } catch (error) {
-    res.json({
-      status: "failed",
+    return res.status(400).json({
       message: error.message,
     });
   }
@@ -34,7 +32,7 @@ const handleLogin = async (req, res) => {
     console.log(email && password);
 
     if (!(email && password)) {
-      return res.json({ message: "Field cannot be empty" });
+      return res.status(400).json({ message: "Field cannot be empty" });
     }
 
     const user = await Auth.findOne({ email });
@@ -59,14 +57,12 @@ const handleLogin = async (req, res) => {
       sameSite: "strict",
     });
 
-    res
-      .status(200)
-      .json({
-        message: "User login successfully",
-        accessToken: accessToken,
-      });
+    return res.status(200).json({
+      message: "User login successfully",
+      accessToken: accessToken,
+    });
   } catch (error) {
-    res
+    return res
       .status(400)
       .json({ message: "User login unsuccessful", error: error.message });
   }
@@ -82,7 +78,7 @@ const handleRefreshToken = async (req, res) => {
 
     const decodedToken = jwt.verify(refreshToken, process.env.JWT_SECRET);
 
-    const user = await User.findById(decodedToken.id);
+    const user = await Auth.findById(decodedToken.id);
     if (!user || user.refreshToken !== refreshToken) {
       return res.status(401).json({ message: "Invalid refresh token" });
     }
@@ -97,19 +93,15 @@ const handleRefreshToken = async (req, res) => {
       secure: true,
       sameSite: "Strict",
     });
-    res
-      .status(200)
-      .json({
-        message: "Refresh token retrieved successfully",
-        accessToken: accessToken,
-      });
+    return res.status(200).json({
+      message: "Refresh token retrieved successfully",
+      accessToken: accessToken,
+    });
   } catch (error) {
-    res
-      .status(401)
-      .json({
-        message: "Invalid or expired refresh token",
-        error: error.message,
-      });
+    return res.status(401).json({
+      message: "Invalid or expired refresh token",
+      error: error.message,
+    });
   }
 };
 
@@ -129,7 +121,9 @@ const handleLogout = async (req, res) => {
 
     return res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
   }
 };
 
@@ -146,19 +140,16 @@ const handleProfileUpdate = async (req, res) => {
 
     if (!updatedUser) {
       return res.status(404).json({
-        status: "failed",
         message: "User not found",
       });
     }
 
-    res.status(200).json({
-      status: "success",
+    return res.status(200).json({
       message: "User updated successfully",
       data: updatedUser,
     });
   } catch (error) {
-    res.status(400).json({
-      status: "failed",
+    return res.status(400).json({
       message: error.message,
     });
   }
@@ -171,7 +162,6 @@ const handleRoleUpdate = async (req, res) => {
 
     if (!role) {
       return res.status(400).json({
-        status: "failed",
         message: "Fill required field",
       });
     }
@@ -180,19 +170,16 @@ const handleRoleUpdate = async (req, res) => {
 
     if (!updatedUser) {
       return res.status(404).json({
-        status: "failed",
         message: "User not found",
       });
     }
 
-    res.status(200).json({
-      status: "success",
+    return res.status(200).json({
       message: "User updated successfully",
       data: updatedUser,
     });
   } catch (error) {
-    res.status(400).json({
-      status: "failed",
+    return res.status(400).json({
       message: error.message,
     });
   }

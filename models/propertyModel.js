@@ -47,6 +47,7 @@ const propertySchema = new mongoose.Schema(
     },
     isActive: {
       type: Boolean,
+      default: true
     },
   },
   {

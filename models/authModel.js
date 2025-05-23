@@ -32,6 +32,7 @@ const authSchema = new mongoose.Schema(
     },
     isActive: {
       type: Boolean,
+      default: true
     },
     refreshToken: { type: String },
   },
