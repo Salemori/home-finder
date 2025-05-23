@@ -2,35 +2,24 @@ const Auth = require("../models/authModel");
 const bcrypt = require("bcrypt");
 // const jwt = require("jsonwebtoten");
 
-
-
-const signUpService = async (email, password) => {
- try {
-    
-  if(!email || !password){
-    return "Fill all fields";
-  }
-     const userExist = await Auth.findOne({ email });
-
+const signUpService = async (userDetails) => {
+  const userExist = await Auth.findOne({ email: userDetails.email });
 
   if (userExist) {
-    return "User already exist";
+    throw new Error("User already registered");
   }
 
   let saltRound = 12;
-  let hashedPassword = await bcrypt.hash(password, saltRound);
+  let hashedPassword = await bcrypt.hash(userDetails.password, saltRound);
 
   const user = new Auth({
-    email,
+    email: userDetails.email,
     password: hashedPassword,
   });
 
   await user.save();
 
   return user;
- } catch (error) {
-    return error.message
- }
 };
 
 // const signInService = async (req, res) => {
@@ -71,36 +60,35 @@ const signUpService = async (email, password) => {
 //   }
 // };
 
-// const updateUser = async (req, res) => {
-//   try {
-//     const { id } = req.params;
+const updateProfileService = async (id, userDetails) => {
+  
 
-//     const updateBody = req.body;
+    const user = await Auth.findByIdAndUpdate(id, userDetails, {
+      new: true,
+      runValidators: true,
+    });
 
-//     const user = await UserModel.findByIdAndUpdate(id, updateBody, {
-//       new: true,
-//       runValidators: true,
-//     });
+   return user;
+  }
 
-//     if (!user) {
-//       console.log(user);
-//       return res.status(404).json({
-//         status: "failed",
-//         message: "User not found",
-//       });
-//     }
 
-//     res.status(200).json({
-//       status: "success",
-//       message: "User updated successfully",
-//     });
-//   } catch (error) {
-//     res.json({
-//       status: "failed",
-//       message: error.message,
-//     });
-//   }
-// };
+const updateRoleService = async (id, userDetails) => {
+   
+  if (!id || ! userDetails){
+    throw new Error("User ID and user update detail is required");
+  }
+
+    const user = await Auth.findByIdAndUpdate(id, userDetails, {
+      new: true,
+      runValidators: true,
+    });
+
+   return user;
+  }
+
+  
+
+
 
 // const getUser = async (req, res) => {
 //   try {
@@ -185,4 +173,4 @@ const signUpService = async (email, password) => {
 //   }
 // };
 
-module.exports = { signUpService }
+module.exports = { signUpService, updateProfileService, updateRoleService };
