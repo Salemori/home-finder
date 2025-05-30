@@ -66,6 +66,54 @@ const handleCreateProperty = async (req, res) => {
 };
 
 
+const handleGetFilteredProperties = async (req, res) => {
+  try {
+    const {
+      city,
+      state,
+      propertyType,
+      purchaseType,
+      minPrice,
+      maxPrice,
+      bedrooms,
+      bathrooms,
+      toilets,
+      status,
+    } = req.query;
+
+    const filters = {
+      isActive: true 
+    };
+
+    if (city) filters['location.city'] = new RegExp(city, 'i');
+    if (state) filters['location.state'] = new RegExp(state, 'i');
+    if (propertyType) filters.propertyType = propertyType;
+    if (purchaseType) filters.purchaseType = purchaseType;
+    if (status) filters.status = status;
+    if (bedrooms) filters['details.bedrooms'] = { $gte: parseInt(bedrooms) };
+    if (bathrooms) filters['details.bathrooms'] = { $gte: parseInt(bathrooms) };
+    if (toilets) filters['details.toilets'] = { $gte: parseInt(toilets) };
+
+    if (minPrice || maxPrice) {
+      filters.price = {};
+      if (minPrice) filters.price.$gte = parseFloat(minPrice);
+      if (maxPrice) filters.price.$lte = parseFloat(maxPrice);
+    }
+
+    const properties = await Property.find(filters).sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: properties.length,
+      data: properties
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+
+
 const handleGetpropertyById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -191,5 +239,6 @@ module.exports = {
   handleGetPropertyByOwner,
   handleUpdateproperty,
   handleDeleteproperty,
-  handlePermanentDeleteproperty
+  handlePermanentDeleteproperty,
+  handleGetFilteredProperties
 };

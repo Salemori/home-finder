@@ -49,7 +49,27 @@ const handleUnsaveProperty = async (req, res) => {
   }
 };
 
+const handleGetUserSavedProperties = async (req, res) =>{
+   try {
+     const {id} = req.params;
+    const userSavedProperties = await SavedProperty
+      .find({ isActive: true, id});
+
+    res.status(200).json({
+      message: "Saved properties retrived successfully",
+      data : userSavedProperties
+    });
+  } catch (error) {
+    res.json({
+      message: error.message,
+   
+    });
+  }
+}
+
+
 module.exports = {
   handleSaveProperty,
   handleUnsaveProperty,
+  handleGetUserSavedProperties
 };
