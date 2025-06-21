@@ -11,7 +11,6 @@ authRouter.patch("/update-role/:id", validateMongoId, handleRoleUpdate);
 authRouter.post("/login", handleLogin);
 authRouter.post("/refresh-token", authToken, validateMongoId, handleRefreshToken);
 authRouter.post("/logout", authToken, validateMongoId, handleLogout);
-
-
+ 
 
 module.exports = authRouter;

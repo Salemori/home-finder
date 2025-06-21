@@ -11,9 +11,9 @@ const app = express();
 connectDB();
 
 app.use(express.json());
-app.use("/auth", authRouter);
-app.use("/property", propertyRouter);
-app.use("/save-property", savedPropertyRouter);
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/property", propertyRouter);
+app.use("/api/v1/save-property", savedPropertyRouter);
 
 const port = process.env.PORT || "8000";
 app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
